@@ -1,0 +1,102 @@
+body {
+    font-family: arial;
+    margin: 0;
+    overflow: hidden;
+}
+
+*::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+*::-webkit-scrollbar-button {
+    width: 0px;
+    height: 0px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #02adff;
+    border: none;
+    border-radius: 7px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #0049d1;
+    border: none;
+    border-radius: 10px;
+}
+
+#app {
+    height: 100vh;
+    transition: 1s;
+}
+
+#navbar {
+    height: 50px;
+    display: flex;
+}
+
+.tab {
+    flex: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: white;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom: 2px white solid;
+    cursor: pointer;
+}
+
+.c1 {
+    background-color: #d80000;
+}
+
+.c2 {
+    background-color: #1917ff;
+}
+
+.panel {
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    transition: left ease-in-out 1s, right ease-in-out 1s, opacity 1s;
+    display: flex;
+}
+
+#startpanel button {
+    height: 30px;
+}
+
+.noselect {
+    /* From https://stackoverflow.com/a/4407335 */
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+.hoverbox {
+    position: relative;
+}
+
+.hoverbox:hover::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #ffffff30;
+    z-index: 1;
+}

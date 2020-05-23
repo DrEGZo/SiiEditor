@@ -1,0 +1,94 @@
+#tabwindow {
+    height: 100%;
+    /* flex: 7; */
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+#windowbar {
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+.property {
+    background-color: #1500ed;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.property-pair {
+    align-items: center;
+    display: flex;
+    padding: 5px;
+}
+
+.prop-name {
+    width: 25%;
+    padding: 5px;
+}
+
+.prop-name span {
+    margin-right: 5px;
+    transition: transform 0.3s;
+}
+
+.prop-name span.rotate {
+    transform: rotate(90deg);
+}
+
+.prop-inputs {
+    width: 75%;
+    flex: none;
+}
+
+.prop-inputs div {
+    display: flex;
+    align-items: center;
+}
+
+.prop-inputs input[type="text"],
+.prop-inputs input[type="number"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    flex: 1;
+    min-width: 0;
+    font-size: 16px;
+}
+
+.bool-input {
+    background-color: #ff0076;
+    padding: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.bool-input.true {
+    background-color: #3ac318;
+}
+
+.bool-input span {
+    width: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prop-inputs div span {
+    font-weight: bold;
+    margin: 0 3px;
+}
+
+.prop-inputs div span:first-child {
+    margin-left: 0;
+}
+
+.prop-inputs div span:last-child {
+    margin-right: 0;
+}

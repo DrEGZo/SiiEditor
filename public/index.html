@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/styles/general.css" type="text/css">
+        <link rel="stylesheet" href="/styles/uploader.css" type="text/css">
+        <link rel="stylesheet" href="/styles/unitbrowser.css" type="text/css">
+        <link rel="stylesheet" href="/styles/editortabs.css" type="text/css">
+        <link rel="stylesheet" href="/styles/editor.css" type="text/css">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script type="text/javascript" src="/scripts/script.js"></script>
+        <script type="text/javascript" src="/scripts/upload.js"></script>
+    </head>
+    <body>
+        <div id="uploader" :style="shown ? 'top:0;opacity:1' : 'top:100vh;opacity:0'">
+            <div id="dropzone" class="noselect" :class="{onhover: hovering, error: error}">
+                {{ text }}
+                <div id="loader" v-show="uploading||downloading"></div>
+                <a id="saver" v-show="downloadable" download="game.sii" onclick="uploader.shown = false"></a>
+            </div>
+        </div>
+        <div id="app" :class="screenClass">
+            <div id="navbar">
+                <div class="tab c1 noselect" @click="changeScreen(1)">Start</div>
+                <div class="tab c2 noselect" @click="changeScreen(2)">Editor</div>
+            </div>
+            <div id="startpanel" class="panel" :style="getPanelPosition(1)">
+                <button onclick="prepareDownload(vm.data)">Save SII-File</button>
+            </div>
+            <div id="editorpanel" class="panel" :style="getPanelPosition(2)">
+                <div id="unitbrowser">
+                    <div class="unit-cat" v-for="(type, name) in types">
+                        <div class="unit-cat-name hoverbox" @click="type.state = !type.state">
+                            <span class="fa fa-chevron-right" :style="type.state ? 'transform:rotate(90deg)' : ''"></span>
+                            <label class="noselect">{{ name }}</label>
+                        </div>
+                        <div class="unit-name noselect hoverbox" v-for="unit in type.entries" v-show="type.state" @dblclick="openTab(unit)">{{ unit.name }}</div>
+                    </div>
+                </div>
+                <div id="tabwindow">
+                    <div id="tabbar">
+                        <div class="editor-tab hoverbox" v-for="(item,i) in openTabs" :class="{ active:  i == activeTab }" @click.self="activeTab = i">
+                            <span class="noselect" @click.self="activeTab = i">{{ item.name }}</span>
+                            <div @click.self="activeTab = i"></div>
+                            <i class="icon-1 fa fa-chevron-left" @click="swapTabs(i - 1, i)"></i>
+                            <i class="icon-2 fa fa-chevron-right" @click="swapTabs(i, i + 1)"></i>
+                            <i class="icon-3 fa fa-times-circle" @click="closeTab(i)"></i>
+                        </div>
+                    </div>
+                    <div id="windowbar">
+                        <div class="property noselect" v-for="prop in getProps">
+                            <div class="property-pair" @click="prop.expand = !prop.expand" :style="/arrayi*/.test(prop.type) ? 'cursor:pointer' : ''">
+                                <div class="prop-name"><span v-if="/arrayi*/.test(prop.type)" class="fa fa-chevron-right" :class="{rotate:prop.expand}"></span>{{ prop.prop }}</div>
+                                <div class="prop-inputs">
+                                    <div class="prop-input-string" v-if="prop.type=='string'">
+                                        <span>"</span>
+                                        <input type="text" v-model="prop.val">
+                                        <span>"</span>
+                                    </div>
+                                    <div class="prop-input-path" v-if="prop.type=='path'">
+                                        <span>"</span>
+                                        <input type="text" v-model="prop.val">
+                                        <span>"</span>
+                                    </div>
+                                    <div class="prop-input-boolean" v-if="prop.type=='boolean'">
+                                        <div class="bool-input" :class="{true:prop.val}" @click="prop.val = !prop.val">
+                                            <span :class="prop.val ? 'fa fa-check' : 'fa fa-close'"></span>
+                                        </div>
+                                    </div>
+                                    <div class="prop-input-number" v-if="prop.type=='number'">
+                                        <input type="number" v-model="prop.val">
+                                    </div>
+                                    <div class="prop-input-number2" v-if="prop.type=='number2'">
+                                        <span>(</span>
+                                        <input type="number" v-model="prop.val[0]">
+                                        <span>,</span>
+                                        <input type="number" v-model="prop.val[1]">
+                                        <span>)</span>
+                                    </div>
+                                    <div class="prop-input-number3" v-if="prop.type=='number3'">
+                                        <span>(</span>
+                                        <input type="number" v-model="prop.val[0]">
+                                        <span>,</span>
+                                        <input type="number" v-model="prop.val[1]">
+                                        <span>,</span>
+                                        <input type="number" v-model="prop.val[2]">
+                                        <span>)</span>
+                                    </div>
+                                    <div class="prop-input-number4" v-if="prop.type=='number4'">
+                                        <span>(</span>
+                                        <input type="number" v-model="prop.val[0]">
+                                        <span>,</span>
+                                        <input type="number" v-model="prop.val[1]">
+                                        <span>,</span>
+                                        <input type="number" v-model="prop.val[2]">
+                                        <span>,</span>
+                                        <input type="number" v-model="prop.val[3]">
+                                        <span>)</span>
+                                    </div>
+                                    <div class="prop-input-placement" v-if="prop.type=='placement'">
+                                        <span>(</span>
+                                        <input type="number" v-model="prop.val[0]">
+                                        <span>,</span>
+                                        <input type="number" v-model="prop.val[1]">
+                                        <span>,</span>
+                                        <input type="number" v-model="prop.val[2]">
+                                        <span>) (</span>
+                                        <input type="number" v-model="prop.val[3]">
+                                        <span>;</span>
+                                        <input type="number" v-model="prop.val[4]">
+                                        <span>,</span>
+                                        <input type="number" v-model="prop.val[5]">
+                                        <span>,</span>
+                                        <input type="number" v-model="prop.val[6]">
+                                        <span>)</span>
+                                    </div>
+                                    <div class="prop-input-placementshort" v-if="prop.type=='placementshort'">
+                                        <span>(</span>
+                                        <input type="number" v-model="prop.val[0]">
+                                        <span>;</span>
+                                        <input type="number" v-model="prop.val[1]">
+                                        <span>,</span>
+                                        <input type="number" v-model="prop.val[2]">
+                                        <span>,</span>
+                                        <input type="number" v-model="prop.val[3]">
+                                        <span>)</span>
+                                    </div>
+                                    <div class="prop-input-link" v-if="prop.type=='pointer'">
+                                        <input type="text" v-model="prop.val">
+                                    </div>
+                                    <div class="prop-input-token" v-if="prop.type=='token'">
+                                        <input type="text" v-model="prop.val">
+                                    </div>
+                                    <div class="prop-input-array" v-if="prop.type=='array' || prop.type=='arrayi'">...</div>
+                                </div>
+                            </div>
+                            <div class="property-pair" v-if="/arrayi*/.test(prop.type)" v-show="prop.expand" v-for="arrProp in prop.val">
+                                <div class="prop-name"></div>
+                                <div class="prop-inputs">
+                                    <div class="prop-input-string" v-if="arrProp.type=='string'">
+                                        <span>"</span>
+                                        <input type="text" v-model="arrProp.val">
+                                        <span>"</span>
+                                    </div>
+                                    <div class="prop-input-path" v-if="arrProp.type=='path'">
+                                        <span>"</span>
+                                        <input type="text" v-model="arrProp.val">
+                                        <span>"</span>
+                                    </div>
+                                    <div class="prop-input-boolean" v-if="arrProp.type=='boolean'">
+                                        <div class="bool-input" :class="{true:arrProp.val}" @click="arrProp.val = !arrProp.val">
+                                            <span :class="arrProp.val ? 'fa fa-check' : 'fa fa-close'"></span>
+                                        </div>
+                                    </div>
+                                    <div class="prop-input-number" v-if="arrProp.type=='number'">
+                                        <input type="number" v-model="arrProp.val">
+                                    </div>
+                                    <div class="prop-input-number2" v-if="arrProp.type=='number2'">
+                                        <span>(</span>
+                                        <input type="number" v-model="arrProp.val[0]">
+                                        <span>,</span>
+                                        <input type="number" v-model="arrProp.val[1]">
+                                        <span>)</span>
+                                    </div>
+                                    <div class="prop-input-number3" v-if="arrProp.type=='number3'">
+                                        <span>(</span>
+                                        <input type="number" v-model="arrProp.val[0]">
+                                        <span>,</span>
+                                        <input type="number" v-model="arrProp.val[1]">
+                                        <span>,</span>
+                                        <input type="number" v-model="arrProp.val[2]">
+                                        <span>)</span>
+                                    </div>
+                                    <div class="prop-input-number4" v-if="arrProp.type=='number4'">
+                                        <span>(</span>
+                                        <input type="number" v-model="arrProp.val[0]">
+                                        <span>,</span>
+                                        <input type="number" v-model="arrProp.val[1]">
+                                        <span>,</span>
+                                        <input type="number" v-model="arrProp.val[2]">
+                                        <span>,</span>
+                                        <input type="number" v-model="arrProp.val[3]">
+                                        <span>)</span>
+                                    </div>
+                                    <div class="prop-input-placement" v-if="arrProp.type=='placement'">
+                                        <span>(</span>
+                                        <input type="number" v-model="arrProp.val[0]">
+                                        <span>,</span>
+                                        <input type="number" v-model="arrProp.val[1]">
+                                        <span>,</span>
+                                        <input type="number" v-model="arrProp.val[2]">
+                                        <span>) (</span>
+                                        <input type="number" v-model="arrProp.val[3]">
+                                        <span>;</span>
+                                        <input type="number" v-model="arrProp.val[4]">
+                                        <span>,</span>
+                                        <input type="number" v-model="arrProp.val[5]">
+                                        <span>,</span>
+                                        <input type="number" v-model="arrProp.val[6]">
+                                        <span>)</span>
+                                    </div>
+                                    <div class="prop-input-placementshort" v-if="arrProp.type=='placementshort'">
+                                        <span>(</span>
+                                        <input type="number" v-model="arrProp.val[0]">
+                                        <span>;</span>
+                                        <input type="number" v-model="arrProp.val[1]">
+                                        <span>,</span>
+                                        <input type="number" v-model="arrProp.val[2]">
+                                        <span>,</span>
+                                        <input type="number" v-model="arrProp.val[3]">
+                                        <span>)</span>
+                                    </div>
+                                    <div class="prop-input-link" v-if="arrProp.type=='pointer'">
+                                        <input type="text" v-model="arrProp.val">
+                                    </div>
+                                    <div class="prop-input-token" v-if="arrProp.type=='token'">
+                                        <input type="text" v-model="arrProp.val">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

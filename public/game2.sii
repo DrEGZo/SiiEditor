@@ -1,0 +1,25 @@
+SiiNunit
+{
+
+job_offer_data : _nameless.1b0.a5be.53f0 {
+    data_path: "/def/vehicle/truck/volvo.fh16/transmission/ato3512f_r_aso.sii"
+    target: "lkwlog.duisburg"
+    expiration_time: 14495660
+    urgency: 0.56
+    shortest_distance_km: &3efa393a
+    ferry_time: true
+    ferry_price: (1.1, 2.2, 3.3)
+    cargo: (1.1, 2.2, 3.3) (5; 1.1, 2.2, 3.3)
+    trailer_definition: (5; 1.1, 2.2, 3.3)
+    company_truck: scania_s_4x2_580
+    test: _nameless.1b0.a5be.53f0
+    trailer_place: 3
+    trailer_place[0]: (1, 2)
+    trailer_place[1]: (1.1, 2.2, 3.3) (5; 1.1, 2.2, 3.3)
+    trailer_place[2]: "lkwlog.duisburg"
+    other_test[]: 14495660
+    other_test[]: (3, 4)
+    other_test[]: true
+}
+
+}

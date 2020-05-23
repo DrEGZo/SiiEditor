@@ -1,0 +1,47 @@
+#unitbrowser {
+    height: 100%;
+    /* flex: 2; */
+    width: 20%;
+    background-color: #0100b1;
+    color: white;
+    font-size: 12px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.unit-cat {
+    background-color: #0100d4;
+    margin: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.unit-cat * {
+    cursor: pointer;
+}
+
+.unit-cat-name {
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.unit-cat-name span {
+    height: 16px;
+    width: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s;
+    flex: none;
+}
+
+.unit-cat-name label {
+    margin-left: 5px;
+}
+
+.unit-name {
+    background-color: #0100f3;
+    padding: 3px 10px;
+}

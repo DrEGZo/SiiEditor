@@ -1,0 +1,34 @@
+Browser fuer Trucks
+- Schadensentfernung
+- Accessory Liste
+- Teile Austauschen
+- Neue Accessories hinzufuegen (oder loeschen)
+- Garagen zuordnen
+Browser fuer Trailer
+- Schadensentfernung
+- Accessory Liste
+- Aendere Besitzeigenschaften
+- Trailerteile Austauschen
+- Hintere Anhaenger hinzufuegen/Entfernen
+- Neue Accessories hinzufuegen (oder loeschen)
+- Garagen zuordnen
+- Trailer hinzufuegen
+Browser fuer Garagen
+- eigene Garagen upgraden/downgraden (wenn moeglich)
+- Trucks, Trailer und Mitarbeiter einsehen
+- Garagen hinzufuegen oder entfernen
+Browser fuer Mitarbeiter
+- Skills veraendern
+- Garagen zuordnen
+Browser fuer Geld und XP
+- Kreditlimit
+- Geld/XP gutschreiben
+- Geld/XP veraendern
+- (Level setzen)
+
+Weitere Ideen:
+- Datei ueber Drag n Drop hochladen
+- 5 Tabs oben fuer die verschiedenen Browser
+- Vue App fuer jeden Browser
+- Bunte Gestaltung mit Animationen
+- DLC Kompatibilitaet

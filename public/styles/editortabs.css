@@ -1,0 +1,118 @@
+#tabbar {
+    height: 30px;
+    width: 100%;
+    display: flex;
+    font-size: 14px;
+    flex: none;
+}
+
+.editor-tab {
+    flex: 1;
+    max-width: 220px;
+    width: fit-content;
+    background-color: #010071;
+    border-radius: 5px 5px 10px 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    overflow: hidden;
+    margin-right: 1px;
+    position: relative;
+    cursor: pointer;
+}
+
+.editor-tab div {
+    display: block;
+    position: absolute;
+    background-image: linear-gradient(to right, #00000000, #010071ff);
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 15px;
+}
+
+.editor-tab.active div {
+    width: 69px;
+    background-image: linear-gradient(to right, #00000000, #00e0f7ff 22%);
+    /* 15/69 */
+}
+
+.editor-tab.active:first-child div,
+.editor-tab.active:last-child div {
+    width: 51px;
+    background-image: linear-gradient(to right, #00000000, #00e0f7ff 29%);
+    /* 15/51 */
+}
+
+.editor-tab.active:first-child:last-child div {
+    width: 33px;
+    background-image: linear-gradient(to right, #00000000, #00e0f7ff 45%);
+    /* 15/33 */
+}
+
+.editor-tab i {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 18px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    z-index: 2;
+}
+
+.icon-1 {
+    right: 36px;
+}
+
+.editor-tab:first-child .icon-1 {
+    display: none;
+}
+
+.icon-2 {
+    right: 18px;
+}
+
+.editor-tab:last-child .icon-2 {
+    display: none;
+}
+
+.editor-tab:last-child .icon-1 {
+    right: 18px;
+}
+
+.icon-3 {
+    right: 0;
+}
+
+.editor-tab:not(.active) i {
+    display: none;
+}
+
+.editor-tab:not(.active):not(:first-child):hover i:not(.icon-2) {
+    display: flex;
+}
+
+.editor-tab:not(.active):not(:last-child):hover i:not(.icon-1) {
+    display: flex;
+}
+
+.editor-tab:not(.active):hover div {
+    width: 69px;
+    background-image: linear-gradient(to right, #00000000, #010071ff 22%);
+}
+
+.editor-tab:not(.active):first-child:hover div,
+.editor-tab:not(.active):last-child:hover div {
+    width: 51px;
+    background-image: linear-gradient(to right, #00000000, #010071ff 29%);
+}
+
+.editor-tab span {
+    text-align: center;
+    width: 100%;
+}
+
+.editor-tab.active {
+    background-color: #00e0f7;
+}

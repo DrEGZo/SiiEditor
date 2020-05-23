@@ -1,0 +1,54 @@
+#uploader {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-color: #ffd400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.5s;
+    z-index: 1;
+}
+
+#dropzone {
+    width: 70vw;
+    height: 70vh;
+    max-width: 70vh;
+    max-height: 70vw;
+    border: 20px dashed white;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    font-size: 50px;
+    padding: 20px;
+    text-align: center;
+    font-weight: 700;
+}
+
+#dropzone.onhover {
+    color: #2acc01;
+    border-color: #2acc01;
+}
+
+#dropzone.error {
+    color: #ff4a4a;
+    border-color: #ff4a4a;
+}
+
+#loader {
+    background-image: url('/img/loading.svg');
+    height: 64px;
+    width: 64px;
+    margin: 20px;
+}
+
+#saver {
+    display: block;
+    background-image: url('/img/file.svg');
+    height: 64px;
+    width: 64px;
+    margin: 20px;
+}
