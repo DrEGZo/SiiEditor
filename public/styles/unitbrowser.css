@@ -14,11 +14,6 @@
     margin: 5px;
     border-radius: 5px;
     overflow: hidden;
-    cursor: pointer;
-}
-
-.unit-cat * {
-    cursor: pointer;
 }
 
 .unit-cat-name {

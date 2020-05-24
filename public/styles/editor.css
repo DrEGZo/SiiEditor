@@ -28,6 +28,7 @@
 .prop-name {
     width: 25%;
     padding: 5px;
+    box-sizing: border-box;
 }
 
 .prop-name span {
@@ -42,11 +43,13 @@
 .prop-inputs {
     width: 75%;
     flex: none;
+    display: flex;
 }
 
-.prop-inputs div {
+.prop-inputs>div {
     display: flex;
     align-items: center;
+    flex: 1;
 }
 
 .prop-inputs input[type="text"],
@@ -60,6 +63,7 @@
     flex: 1;
     min-width: 0;
     font-size: 16px;
+    width: 0;
 }
 
 .bool-input {
@@ -73,22 +77,65 @@
     background-color: #3ac318;
 }
 
-.bool-input span {
-    width: 16px;
+.bool-input>span {
+    width: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.prop-inputs div span {
+.prop-inputs>div>span {
     font-weight: bold;
     margin: 0 3px;
 }
 
-.prop-inputs div span:first-child {
+.prop-inputs>div>span:first-child {
     margin-left: 0;
 }
 
-.prop-inputs div span:last-child {
+.prop-inputs>div>span:last-child {
     margin-right: 0;
+}
+
+div.prop-input-options {
+    position: relative;
+    flex: none;
+    margin-left: 3px;
+}
+
+.prop-input-options>button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    background: none;
+    font-size: 16px;
+    color: #fff;
+    display: block;
+    border-radius: 10px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.prop-input-options-select {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #444;
+    z-index: 1;
+    border-radius: 10px 0 10px 10px;
+    overflow: hidden;
+}
+
+.prop-input-options-select div {
+    padding: 5px;
+}
+
+.prop-input-options>button:focus~.prop-input-options-select {
+    display: block;
 }

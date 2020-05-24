@@ -132,6 +132,15 @@
                                         <input type="text" v-model="prop.val">
                                     </div>
                                     <div class="prop-input-array" v-if="prop.type=='array' || prop.type=='arrayi'">...</div>
+                                    <div class="prop-input-options">
+                                        <button class="fa fa-ellipsis-v hoverbox" onmousedown="if (this == document.activeElement) setTimeout(() => { this.blur() }, 5)" @click.stop=""></button>
+                                        <div class="prop-input-options-select">
+                                            <div class="hoverbox">Delete&nbsp;attribute</div>
+                                            <div class="hoverbox">Change&nbsp;type</div>
+                                            <div class="hoverbox">Append&nbsp;attribute</div>
+                                            <div class="hoverbox">Prepend&nbsp;attribute</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="property-pair" v-if="/arrayi*/.test(prop.type)" v-show="prop.expand" v-for="arrProp in prop.val">
@@ -216,6 +225,15 @@
                                     <div class="prop-input-token" v-if="arrProp.type=='token'">
                                         <input type="text" v-model="arrProp.val">
                                     </div>
+                                    <div class="prop-input-options">
+                                        <button class="fa fa-ellipsis-v hoverbox" onmousedown="if (this == document.activeElement) setTimeout(() => { this.blur() }, 5)" @click.stop=""></button>
+                                        <div class="prop-input-options-select">
+                                            <div class="hoverbox">Delete&nbsp;element</div>
+                                            <div class="hoverbox">Change&nbsp;type</div>
+                                            <div class="hoverbox">Append&nbsp;element</div>
+                                            <div class="hoverbox">Prepend&nbsp;element</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -245,7 +263,7 @@
                         <option value="arrayi">Array (indexed)</option>
                     </select>
                     <div class="buttons">
-                        <button style="background-color:#3ac318" @click="overlayConfirm">Confirm</button>
+                        <button style="background-color:#3ac318" onclick="overlayConfirm()">Confirm</button>
                         <button style="background-color:#ff0076" @click="overlayShow = false">Cancel</button>
                     </div>
                 </div>

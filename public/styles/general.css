@@ -87,9 +87,11 @@ body {
 
 .hoverbox {
     position: relative;
+    overflow: hidden;
+    cursor: pointer;
 }
 
-.hoverbox:hover::before {
+.hoverbox:hover::after {
     content: "";
     display: block;
     position: absolute;
