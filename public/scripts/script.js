@@ -16,7 +16,9 @@ let main = function () {
             types: {},
             openTabs: [],
             activeTab: -1,
-            alertMsg: ''
+            alertMsg: '',
+            overlayShow: false,
+            overlayState: ''
         },
         methods: {
             changeScreen: function (screen) {
@@ -76,6 +78,17 @@ let main = function () {
             getProps: function () {
                 if (this.activeTab == -1) return [];
                 else return this.data[this.openTabs[this.activeTab].index].cont;
+            },
+            overlayLabels: function () {
+                let labels = {
+                    h: '',
+                    span: []
+                }
+                if (this.overlayState = 'addprop') {
+                    labels.h = 'Add new property',
+                    labels.span.push('Attribute name');
+                };
+                return labels;
             }
         }
     });
@@ -86,6 +99,10 @@ function showAlert(msg) {
     let alert = document.getElementById('alert');
     alert.style.bottom = '10px';
     setTimeout(() => { alert.style.bottom = '-60px' }, 3000);
+}
+
+function overlayConfirm() {
+    // whatever to do when confirm is hit based on the overlayState
 }
 
 window.addEventListener('load', main);

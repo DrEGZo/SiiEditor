@@ -223,6 +223,33 @@
                 </div>
             </div>
             <div id="alert">{{ alertMsg }}<span class="fa fa-check"></span></div>
+            <div id="overlay" v-show="overlayShow">
+                <div>
+                    <h1>{{ overlayLabels.h }}</h1>
+                    <span>{{ overlayLabels.span[0] }}</span>
+                    <input type="text">
+                    <span v-show="overlayState == 'addprop'">Attribute type</span>
+                    <select v-show="overlayState == 'addprop'">
+                        <option value="string">String</option>
+                        <option value="path">Resource Tie</option>
+                        <option value="boolean">Boolean</option>
+                        <option value="number">Number</option>
+                        <option value="number2">Number2</option>
+                        <option value="number3">Number3</option>
+                        <option value="number4">Number4</option>
+                        <option value="placement">Placement</option>
+                        <option value="placementshort">Placement (Short)</option>
+                        <option value="pointer">Owner Poiner</option>
+                        <option value="token">Token or Link Pointer</option>
+                        <option value="array">Array</option>
+                        <option value="arrayi">Array (indexed)</option>
+                    </select>
+                    <div class="buttons">
+                        <button style="background-color:#3ac318" @click="overlayConfirm">Confirm</button>
+                        <button style="background-color:#ff0076" @click="overlayShow = false">Cancel</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

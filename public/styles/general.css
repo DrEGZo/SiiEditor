@@ -118,3 +118,57 @@ body {
 #alert span {
     margin-left: 5px;
 }
+
+#overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: #00000080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#overlay>div {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    width: 50%;
+}
+
+#overlay>span {
+    margin: 0 0 5px 7px;
+}
+
+#overlay input, #overlay select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 2px solid #bbb;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 25px;
+}
+
+#overlay .buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#overlay button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: navajowhite;
+    padding: 5px;
+    font-size: 16px;
+    color: #fff;
+    margin-left: 10px;
+    border-radius: 5px;
+}
+
