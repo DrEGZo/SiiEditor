@@ -14,11 +14,13 @@ let main = function () {
             screen: 2,
             data: [],
             types: {},
+            units: {},
             openTabs: [],
             activeTab: -1,
             alertMsg: '',
             overlayShow: false,
-            overlayState: ''
+            overlayState: '',
+            overlayMeta: []
         },
         methods: {
             changeScreen: function (screen) {
@@ -31,11 +33,13 @@ let main = function () {
                     opacity: panel == this.screen ? 1 : 0
                 };
             },
-            openTab: function (item) {
+            openTab: function (name) {
+                if (!(name in this.units)) return;
+                let index = this.units[name];
                 let alreadyOpen = false;
                 let openAtIndex = this.openTabs.length;
                 for (let i = 0; i < this.openTabs.length; i++) {
-                    if (this.openTabs[i].index == item.index) {
+                    if (this.openTabs[i].index == index) {
                         alreadyOpen = true;
                         openAtIndex = i;
                         break;
@@ -43,8 +47,8 @@ let main = function () {
                 }
                 if (!alreadyOpen) {
                     this.openTabs.push({
-                        name: item.name,
-                        index: item.index,
+                        name: name,
+                        index: index,
                         i: this.openTabs.length
                     });
                 } 
@@ -69,6 +73,13 @@ let main = function () {
                 this.openTabs[b].i = b;
                 if (this.activeTab == a) this.activeTab = b;
                 else if (this.activeTab == b) this.activeTab = a;
+            },
+            openOverlay: function (name, metadata) {
+                this.overlayState = name;
+                this.overlayMeta = metadata;
+                let select = document.querySelector('#overlay select');
+                if (name == 'chtype') select.value = this.data[metadata[0]].cont[metadata[1]].type;
+                this.overlayShow = true;
             }
         },
         computed: {
@@ -79,16 +90,11 @@ let main = function () {
                 if (this.activeTab == -1) return [];
                 else return this.data[this.openTabs[this.activeTab].index].cont;
             },
-            overlayLabels: function () {
-                let labels = {
-                    h: '',
-                    span: []
-                }
-                if (this.overlayState = 'addprop') {
-                    labels.h = 'Add new property',
-                    labels.span.push('Attribute name');
-                };
-                return labels;
+            overlayLabel: function () {
+                if (this.overlayState == 'appprop') return 'Add New Attribute';
+                if (this.overlayState == 'preprop') return 'Add New Attribute';
+                if (this.overlayState == 'rmprop') return 'Remove Attribute?';
+                if (this.overlayState == 'chtype') return 'Change Attribute Type';
             }
         }
     });
@@ -99,10 +105,6 @@ function showAlert(msg) {
     let alert = document.getElementById('alert');
     alert.style.bottom = '10px';
     setTimeout(() => { alert.style.bottom = '-60px' }, 3000);
-}
-
-function overlayConfirm() {
-    // whatever to do when confirm is hit based on the overlayState
 }
 
 window.addEventListener('load', main);

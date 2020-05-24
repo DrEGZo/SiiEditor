@@ -108,15 +108,17 @@ function parseSIItoJSON(sii) {
                     prop: property,
                     val: value,
                     type: type,
-                    expand: false // for arrays
+                    expand: false, // for arrays
+                    unit: i // backreference used for actions with this line in the editor
                 });
             }
             // remember arrays of unit to deal with them later
             if (Object.keys(arraylist).length > 0) review_arrays.push([i, arraylist]);
             // note unit name
-            globalUnitNames[unitname] = true;
+            globalUnitNames[unitname] = i;
             // note city names
             if (unittype == 'garage') globalCityNames.push(unitname.match(/^garage[.](.+)$/)[1]);
+            // add to result
             result.push({
                 type: unittype,
                 name: unitname,
@@ -124,14 +126,11 @@ function parseSIItoJSON(sii) {
             });
             // remember unit types and which units belong to it
             if (unittype in globalUnitTypes) {
-                globalUnitTypes[unittype].entries.push({
-                    name: unitname,
-                    index: i
-                });
+                globalUnitTypes[unittype].entries.push(unitname);
             } else {
                 globalUnitTypes[unittype] = {
                     state: false,
-                    entries: [{ name: unitname, index: i }]
+                    entries: [unitname]
                 };
             }
         }

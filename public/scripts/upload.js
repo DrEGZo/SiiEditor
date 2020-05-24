@@ -74,6 +74,7 @@ function parseSIItoJSON(sii) {
                 console.log(e.data.data);
                 vm.data = e.data.data.result;
                 vm.types = e.data.data.types;
+                vm.units = e.data.data.units;
                 uploader.shown = false;
             } else if (e.data.msg == 'error') {
                 console.log('Your file is corrupted... or maybe just not decrypted? Anyways, parsing has failed.');
