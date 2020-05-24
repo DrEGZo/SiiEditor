@@ -100,3 +100,21 @@ body {
     background-color: #ffffff30;
     z-index: 1;
 }
+
+#alert {
+    position: absolute;
+    right: 10px;
+    bottom: -60px;
+    color: #fff;
+    background-color: #4CAF50;
+    padding: 10px;
+    border-radius: 10px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    transition: bottom 0.3s;
+}
+
+#alert span {
+    margin-left: 5px;
+}

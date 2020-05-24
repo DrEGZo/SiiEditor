@@ -15,7 +15,8 @@ let main = function () {
             data: [],
             types: {},
             openTabs: [],
-            activeTab: -1
+            activeTab: -1,
+            alertMsg: ''
         },
         methods: {
             changeScreen: function (screen) {
@@ -78,6 +79,13 @@ let main = function () {
             }
         }
     });
+}
+
+function showAlert(msg) {
+    vm.alertMsg = msg;
+    let alert = document.getElementById('alert');
+    alert.style.bottom = '10px';
+    setTimeout(() => { alert.style.bottom = '-60px' }, 3000);
 }
 
 window.addEventListener('load', main);
