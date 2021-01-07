@@ -34,7 +34,10 @@ let main = function () {
                 };
             },
             openTab: function (name) {
-                if (!(name in this.units)) return;
+                if (!(name in this.units)) {
+                    alert('Dangling pointer. Unit does not exist.');
+                    return;
+                }
                 let index = this.units[name];
                 let alreadyOpen = false;
                 let openAtIndex = this.openTabs.length;
@@ -78,8 +81,25 @@ let main = function () {
                 this.overlayState = name;
                 this.overlayMeta = metadata;
                 let select = document.querySelector('#overlay select');
-                if (name == 'chtype') select.value = this.data[metadata[0]].cont[metadata[1]].type;
-                this.overlayShow = true;
+                if (metadata[2] == undefined) {
+                    if (name == 'chtype') select.value = this.data[metadata[0]].cont[metadata[1]].type;
+                    else select.value = 'string';
+                    this.overlayShow = true;
+                } else {
+                    if (name == 'rmprop') this.overlayShow = true;
+                    else if (name == 'chtype') {
+                        select.value = this.data[metadata[0]].cont[metadata[1]].val[metadata[2]].type;
+                        this.overlayShow = true;
+                    } else if (this.data[metadata[0]].cont[metadata[1]].val.length == 0) {
+                        select.value = 'string';
+                        this.overlayShow = true;
+                    } else {
+                        let type = this.data[metadata[0]].cont[metadata[1]].val[metadata[2]].type;
+                        let val = getDefaultValue(type);
+                        let newData = { type: type, val: val };
+                        this.data[metadata[0]].cont[metadata[1]].val.splice(name == 'appprop' ? metadata[2] + 1 : metadata[2], 0, newData);
+                    }
+                }
             }
         },
         computed: {
@@ -95,6 +115,18 @@ let main = function () {
                 if (this.overlayState == 'preprop') return 'Add New Attribute';
                 if (this.overlayState == 'rmprop') return 'Remove Attribute?';
                 if (this.overlayState == 'chtype') return 'Change Attribute Type';
+            },
+            overlayInfo: function () {
+                if (this.overlayState == 'rmprop') return 'Bear in mind that this cannot be undone.';
+                if (this.overlayState == 'chtype') return 'This will override the porperty\'s current value.';
+            },
+            canShowOption: function () {
+                if (this.overlayState != 'chtype') return true;
+                let unit = this.overlayMeta[0];
+                let index = this.overlayMeta[1];
+                if (/arrayi*/.test(this.data[unit].cont[index].type)) {
+                    return this.data[unit].cont[index].val.length == 0;
+                } else return true;
             }
         }
     });

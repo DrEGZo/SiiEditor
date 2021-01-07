@@ -142,8 +142,8 @@ body {
     width: 50%;
 }
 
-#overlay>span {
-    margin: 0 0 5px 7px;
+#overlay span {
+    margin: 0 0 8px 4px;
 }
 
 #overlay input, #overlay select {

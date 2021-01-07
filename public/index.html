@@ -138,14 +138,15 @@
                                         <div class="prop-input-options-select">
                                             <div class="hoverbox" v-if="prop.type == 'pointer'" @mousedown="openTab(prop.val)">Open&nbsp;link</div>
                                             <div class="hoverbox" @mousedown="openOverlay('rmprop',[prop.unit,j])">Delete&nbsp;attribute</div>
-                                            <div class="hoverbox" v-if="/arrayi*/.test(prop.type) ? prop.val.length == 0 : true" @mousedown="openOverlay('chtype',[prop.unit,j])">Change&nbsp;type</div>
+                                            <div class="hoverbox" @mousedown="openOverlay('chtype',[prop.unit,j])">Change&nbsp;type</div>
                                             <div class="hoverbox" @mousedown="openOverlay('appprop',[prop.unit,j])">Append&nbsp;attribute</div>
                                             <div class="hoverbox" @mousedown="openOverlay('preprop',[prop.unit,j])">Prepend&nbsp;attribute</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="property-pair" v-if="/arrayi*/.test(prop.type)" v-show="prop.expand" v-for="arrProp in prop.val">
+                            <div class="property-pair emptyArray" v-if="/arrayi*/.test(prop.type)" v-show="prop.expand && prop.val.length == 0" @click="openOverlay('preprop',[prop.unit,j,0])">Array is empty. Click here to add a value.</div>
+                            <div class="property-pair" v-if="/arrayi*/.test(prop.type)" v-show="prop.expand" v-for="(arrProp,k) in prop.val">
                                 <div class="prop-name"></div>
                                 <div class="prop-inputs">
                                     <div class="prop-input-string" v-if="arrProp.type=='string'">
@@ -230,11 +231,11 @@
                                     <div class="prop-input-options">
                                         <button class="fa fa-ellipsis-v hoverbox" onmousedown="if (this == document.activeElement) setTimeout(() => { this.blur() }, 5)" @click.stop=""></button>
                                         <div class="prop-input-options-select">
-                                            <div class="hoverbox" v-if="arrProp.type == 'pointer'">Open&nbsp;link</div>
-                                            <div class="hoverbox">Delete&nbsp;element</div>
-                                            <div class="hoverbox">Change&nbsp;type</div>
-                                            <div class="hoverbox">Append&nbsp;element</div>
-                                            <div class="hoverbox">Prepend&nbsp;element</div>
+                                            <div class="hoverbox" v-if="arrProp.type == 'pointer'" @mousedown="openTab(arrProp.val)">Open&nbsp;link</div>
+                                            <div class="hoverbox" @mousedown="openOverlay('rmprop',[prop.unit,j,k])">Delete&nbsp;element</div>
+                                            <div class="hoverbox" @mousedown="openOverlay('chtype',[prop.unit,j,k])">Change&nbsp;type</div>
+                                            <div class="hoverbox" @mousedown="openOverlay('appprop',[prop.unit,j,k])">Append&nbsp;element</div>
+                                            <div class="hoverbox" @mousedown="openOverlay('preprop',[prop.unit,j,k])">Prepend&nbsp;element</div>
                                         </div>
                                     </div>
                                 </div>
@@ -247,24 +248,25 @@
             <div id="overlay" v-show="overlayShow">
                 <div>
                     <h1>{{ overlayLabel }}</h1>
-                    <span v-show="/(appprop|preprop)/.test(overlayState)">Name</span>
-                    <input type="text" v-show="/(appprop|preprop)/.test(overlayState)">
+                    <span v-show="/(appprop|preprop)/.test(overlayState) && overlayMeta[2] == undefined">Name</span>
+                    <input type="text" v-show="/(appprop|preprop)/.test(overlayState) && overlayMeta[2] == undefined">
                     <span v-show="/(appprop|preprop|chtype)/.test(overlayState)">Attribute type</span>
                     <select v-show="/(appprop|preprop|chtype)/.test(overlayState)">
-                        <option value="string">String</option>
-                        <option value="path">Resource Tie</option>
-                        <option value="boolean">Boolean</option>
-                        <option value="number">Number</option>
-                        <option value="number2">Number2</option>
-                        <option value="number3">Number3</option>
-                        <option value="number4">Number4</option>
-                        <option value="placement">Placement</option>
-                        <option value="placementshort">Placement (Short)</option>
-                        <option value="pointer">Owner Poiner</option>
-                        <option value="token">Token or Link Pointer</option>
+                        <option v-if="canShowOption" value="string">String</option>
+                        <option v-if="canShowOption" value="path">Resource Tie</option>
+                        <option v-if="canShowOption" value="boolean">Boolean</option>
+                        <option v-if="canShowOption" value="number">Number</option>
+                        <option v-if="canShowOption" value="number2">Number2</option>
+                        <option v-if="canShowOption" value="number3">Number3</option>
+                        <option v-if="canShowOption" value="number4">Number4</option>
+                        <option v-if="canShowOption" value="placement">Placement</option>
+                        <option v-if="canShowOption" value="placementshort">Placement (Short)</option>
+                        <option v-if="canShowOption" value="pointer">Owner Poiner</option>
+                        <option v-if="canShowOption" value="token">Token or Link Pointer</option>
                         <option value="array">Array</option>
                         <option value="arrayi">Array (indexed)</option>
                     </select>
+                    <span v-show="/(chtype|rmprop)/.test(overlayState)"><i>{{ overlayInfo }}</i></span>
                     <div class="buttons">
                         <button style="background-color:#3ac318" onclick="overlayConfirm()">Confirm</button>
                         <button style="background-color:#ff0076" @click="overlayShow = false">Cancel</button>
