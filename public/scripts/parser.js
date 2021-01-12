@@ -65,7 +65,7 @@ function parseSIItoJSON(sii) {
                 } else if (/^(true|false)$/.test(value)) {
                     type = 'boolean';
                     value = value == 'true';
-                } else if (/^(-*[0-9.]+|&[0-9a-f]{8})$/.test(value)) {
+                } else if (/^(-*[0-9.]+(e(\+|-)[0-9]+)?|&[0-9a-f]{8})$/.test(value)) {
                     type = 'number';
                     value = IEEE754toFloat(value);
                 }
@@ -196,6 +196,8 @@ function IEEE754toFloat(value) {
         }
         let view = new DataView(buffer);
         return view.getFloat32(0, false);
+    }).replace(/([0-9][.][0-9]+)e([+-][0-9]+)/g, function($0, $1, $2) {
+        return parseFloat($1) * Math.pow(10, parseInt($2));
     });
 }
 
