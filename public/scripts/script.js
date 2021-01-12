@@ -102,6 +102,53 @@ let main = function () {
                         this.data[metadata[0]].cont[metadata[1]].val.splice(name == 'appprop' ? metadata[2] + 1 : metadata[2], 0, newData);
                     }
                 }
+            },
+            copyUnit: function (name) {
+                let index = this.units[name];
+                let newIndex = this.data.length;
+                name = name.replace(/^(.+)(_[0-9]+)$/, ($0, $1) => $1);
+                let i = 0;
+                while ((name + '_' + i) in this.units) i++;
+                name += '_' + i;
+                let type = this.data[index].type;
+                let props = [];
+                this.units[name] = newIndex; // non-reactive!
+                this.types[type].entries.push(name);
+                for (let i = 0; i < this.data[index].cont.length; i++) {
+                    let prop = {
+                        expand: false,
+                        prop: this.data[index].cont[i].prop,
+                        type: this.data[index].cont[i].type,
+                        unit: newIndex,
+                        val: null
+                    };
+                    if (!prop.type.includes('array')) prop.val = this.data[index].cont[i].val;
+                    else {
+                        prop.val = [];
+                        for (let j = 0; j < this.data[index].cont[i].val.length; j++) {
+                            prop.val.push({
+                                type: this.data[index].cont[i].val[j].type,
+                                val: this.data[index].cont[i].val[j].val
+                            });
+                        }
+                    }
+                    props.push(prop);
+                }
+                this.data.push({
+                    type: type,
+                    name: name,
+                    cont: props
+                });
+                return name;
+            },
+            deleteUnit: function (name, close) {
+                if (close != undefined) this.closeTab(close);
+                let index = this.units[name];
+                let type = this.data[index].type;
+                let i = this.types[type].entries.indexOf(name);
+                this.data.splice(index, 1);
+                this.types[type].entries.splice(i, 1);
+                delete this.units[name];
             }
         },
         computed: {
