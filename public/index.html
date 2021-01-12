@@ -48,8 +48,14 @@
                             <i class="icon-3 fa fa-times-circle" @click="closeTab(i)"></i>
                         </div>
                     </div>
+                    <div id="unit-options" v-show="activeTab != -1">
+                        <input type="text" placeholder="Filter for property..." v-if="activeTab != -1" v-model="openTabs[activeTab].filter">
+                        <i class="fa fa-close"></i>
+                        <button>Create Unit Copy</button>
+                        <button>Delete Unit</button>
+                    </div>
                     <div id="windowbar">
-                        <div class="property noselect" v-for="(prop,j) in getProps">
+                        <div class="property noselect" v-for="(prop,j) in getProps" v-show="prop.prop.toLowerCase().includes(openTabs[activeTab].filter.toLowerCase())">
                             <div class="property-pair" @click="prop.expand = !prop.expand" :style="/arrayi*/.test(prop.type) ? 'cursor:pointer' : ''">
                                 <div class="prop-name"><span v-if="/arrayi*/.test(prop.type)" class="fa fa-chevron-right" :class="{rotate:prop.expand}"></span>{{ prop.prop }}</div>
                                 <div class="prop-inputs">

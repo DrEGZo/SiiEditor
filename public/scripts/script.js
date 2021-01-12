@@ -20,7 +20,8 @@ let main = function () {
             alertMsg: '',
             overlayShow: false,
             overlayState: '',
-            overlayMeta: []
+            overlayMeta: [],
+            filter: ''
         },
         methods: {
             changeScreen: function (screen) {
@@ -52,7 +53,8 @@ let main = function () {
                     this.openTabs.push({
                         name: name,
                         index: index,
-                        i: this.openTabs.length
+                        i: this.openTabs.length,
+                        filter: ''
                     });
                 } 
                 this.activeTab = openAtIndex;
