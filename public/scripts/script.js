@@ -40,11 +40,10 @@ let main = function () {
                     alert('Dangling pointer. Unit does not exist.');
                     return;
                 }
-                let index = this.units[name];
                 let alreadyOpen = false;
                 let openAtIndex = this.openTabs.length;
                 for (let i = 0; i < this.openTabs.length; i++) {
-                    if (this.openTabs[i].index == index) {
+                    if (this.openTabs[i].name == name) {
                         alreadyOpen = true;
                         openAtIndex = i;
                         break;
@@ -53,8 +52,6 @@ let main = function () {
                 if (!alreadyOpen) {
                     this.openTabs.push({
                         name: name,
-                        index: index,
-                        i: this.openTabs.length,
                         filter: '',
                         pointerBak: ''
                     });
@@ -63,11 +60,6 @@ let main = function () {
             },
             closeTab: function (index) {
                 this.openTabs.splice(index, 1);
-                for (let i = index; i < this.openTabs.length; i++) {
-                    let copy = this.openTabs[i];
-                    copy.i = i;
-                    this.openTabs.splice(i, 1, copy);
-                }
                 if (this.activeTab == index)  {
                     if (index == this.openTabs.length) this.activeTab--;
                 } else if (this.activeTab > index) this.activeTab--;
@@ -76,8 +68,6 @@ let main = function () {
                 let copy = this.openTabs[a];
                 this.openTabs.splice(a, 1, this.openTabs[b]);
                 this.openTabs.splice(b, 1, copy);
-                this.openTabs[a].i = a;
-                this.openTabs[b].i = b;
                 if (this.activeTab == a) this.activeTab = b;
                 else if (this.activeTab == b) this.activeTab = a;
             },
@@ -233,7 +223,7 @@ let main = function () {
             },
             getProps: function () {
                 if (this.activeTab == -1) return [];
-                else return this.data[this.openTabs[this.activeTab].index].cont;
+                else return this.data[this.units[this.openTabs[this.activeTab].name]].cont;
             },
             overlayLabel: function () {
                 if (this.overlayState == 'appprop') return 'Add New Attribute';
@@ -257,6 +247,12 @@ let main = function () {
                 if (/arrayi*/.test(this.data[unit].cont[index].type)) {
                     return this.data[unit].cont[index].val.length == 0;
                 } else return true;
+            },
+            getTabInfo: function () {
+                if (this.activeTab == -1) return '';
+                let name = this.openTabs[this.activeTab].name;
+                let type = this.data[this.units[name]].type;
+                return type + ': ' + name;
             }
         }
     });

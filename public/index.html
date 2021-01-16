@@ -49,6 +49,7 @@
                             <i class="icon-3 fa fa-times-circle" @click="closeTab(i)"></i>
                         </div>
                     </div>
+                    <h1 v-if="activeTab != -1" class="noselect">{{ getTabInfo }}</h1>
                     <div id="unit-options" v-show="activeTab != -1">
                         <input type="text" placeholder="Filter for property..." v-if="activeTab != -1" v-model="openTabs[activeTab].filter">
                         <i class="fa fa-close"></i>
