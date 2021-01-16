@@ -26,6 +26,7 @@ function parseSIItoJSON(sii) {
         let globalUnitNames = {};
         let globalCityNames = [];
         let globalUnitTypes = {};
+        let globalReferences = {};
         let result = [];
         let review_items = [];
         let review_arrays = [];
@@ -108,14 +109,18 @@ function parseSIItoJSON(sii) {
                     prop: property,
                     val: value,
                     type: type,
-                    expand: false, // for arrays
-                    unit: i // backreference used for actions with this line in the editor
+                    expand: false // for arrays
                 });
             }
             // remember arrays of unit to deal with them later
             if (Object.keys(arraylist).length > 0) review_arrays.push([i, arraylist]);
             // note unit name
             globalUnitNames[unitname] = i;
+            // create reference container
+            globalReferences[unitname] = {
+                refs: [],
+                refBy: []
+            };
             // note city names
             if (unittype == 'garage') globalCityNames.push(unitname.match(/^garage[.](.+)$/)[1]);
             // add to result
@@ -142,6 +147,12 @@ function parseSIItoJSON(sii) {
             else if (/^[a-z0-9_.]+$/i.test(value)) newType = 'token';
             else reject('e16');
             result[review_items[i][0]].cont[review_items[i][1]].type = newType;
+            // create reference
+            if (value in globalUnitNames) {
+                let parent = result[review_items[i][0]].name;
+                globalReferences[parent].refs.push(value);
+                globalReferences[value].refBy.push(parent);
+            }
         }
         // review all arrays
         for (let i = 0; i < review_arrays.length; i++) {
@@ -182,7 +193,7 @@ function parseSIItoJSON(sii) {
             toBeDeleted.sort((a, b) => ((a < b) ? 1 : -1));
             for (let j = 0; j < toBeDeleted.length; j++) result[review_arrays[i][0]].cont.splice(toBeDeleted[j], 1);
         }
-        resolve({result: result, cities: globalCityNames, units: globalUnitNames, types: globalUnitTypes });
+        resolve({result: result, cities: globalCityNames, units: globalUnitNames, types: globalUnitTypes, refs: globalReferences });
     });
 }
 

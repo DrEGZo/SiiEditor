@@ -11,6 +11,7 @@
         <script type="text/javascript" src="/scripts/script.js"></script>
         <script type="text/javascript" src="/scripts/upload.js"></script>
         <script type="text/javascript" src="/scripts/editor.js"></script>
+        <script>let _placeholder = '';</script>
     </head>
     <body>
         <div id="uploader" :style="shown ? 'top:0;opacity:1' : 'top:100vh;opacity:0'">
@@ -51,8 +52,8 @@
                     <div id="unit-options" v-show="activeTab != -1">
                         <input type="text" placeholder="Filter for property..." v-if="activeTab != -1" v-model="openTabs[activeTab].filter">
                         <i class="fa fa-close"></i>
-                        <button @click="openTab(copyUnit(openTabs[activeTab].name))">Create Unit Copy</button>
-                        <button @click="deleteUnit(openTabs[activeTab].name, activeTab)">Delete Unit</button>
+                        <button @click="openOverlay('cpunit', [])">Clone Unit</button>
+                        <button @click="openOverlay('rmunit', [])">Delete Unit</button>
                     </div>
                     <div id="windowbar">
                         <div class="property noselect" v-for="(prop,j) in getProps" v-show="prop.prop.toLowerCase().includes(openTabs[activeTab].filter.toLowerCase())">
@@ -133,7 +134,7 @@
                                         <span>)</span>
                                     </div>
                                     <div class="prop-input-link" v-if="prop.type=='pointer'">
-                                        <input type="text" v-model="prop.val">
+                                        <input type="text" v-model="prop.val" @focus="openTabs[activeTab].pointerBak = $event.target.value" @input="pointerUpdate($event.target.value)">
                                     </div>
                                     <div class="prop-input-token" v-if="prop.type=='token'">
                                         <input type="text" v-model="prop.val">
@@ -143,15 +144,15 @@
                                         <button class="fa fa-ellipsis-v hoverbox" onmousedown="if (this == document.activeElement) setTimeout(() => { this.blur() }, 5)" @click.stop=""></button>
                                         <div class="prop-input-options-select">
                                             <div class="hoverbox" v-if="prop.type == 'pointer'" @mousedown="openTab(prop.val)">Open&nbsp;link</div>
-                                            <div class="hoverbox" @mousedown="openOverlay('rmprop',[prop.unit,j])">Delete&nbsp;attribute</div>
-                                            <div class="hoverbox" @mousedown="openOverlay('chtype',[prop.unit,j])">Change&nbsp;type</div>
-                                            <div class="hoverbox" @mousedown="openOverlay('appprop',[prop.unit,j])">Append&nbsp;attribute</div>
-                                            <div class="hoverbox" @mousedown="openOverlay('preprop',[prop.unit,j])">Prepend&nbsp;attribute</div>
+                                            <div class="hoverbox" @mousedown="openOverlay('rmprop',[j])">Delete&nbsp;attribute</div>
+                                            <div class="hoverbox" @mousedown="openOverlay('chtype',[j])">Change&nbsp;type</div>
+                                            <div class="hoverbox" @mousedown="openOverlay('appprop',[j])">Append&nbsp;attribute</div>
+                                            <div class="hoverbox" @mousedown="openOverlay('preprop',[j])">Prepend&nbsp;attribute</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="property-pair emptyArray" v-if="/arrayi*/.test(prop.type)" v-show="prop.expand && prop.val.length == 0" @click="openOverlay('preprop',[prop.unit,j,0])">Array is empty. Click here to add a value.</div>
+                            <div class="property-pair emptyArray" v-if="/arrayi*/.test(prop.type)" v-show="prop.expand && prop.val.length == 0" @click="openOverlay('preprop',[j,0])">Array is empty. Click here to add a value.</div>
                             <div class="property-pair" v-if="/arrayi*/.test(prop.type)" v-show="prop.expand" v-for="(arrProp,k) in prop.val">
                                 <div class="prop-name"></div>
                                 <div class="prop-inputs">
@@ -229,7 +230,7 @@
                                         <span>)</span>
                                     </div>
                                     <div class="prop-input-link" v-if="arrProp.type=='pointer'">
-                                        <input type="text" v-model="arrProp.val">
+                                        <input type="text" v-model="arrProp.val" @focus="openTabs[activeTab].pointerBak = $event.target.value" @input="pointerUpdate($event.target.value)">
                                     </div>
                                     <div class="prop-input-token" v-if="arrProp.type=='token'">
                                         <input type="text" v-model="arrProp.val">
@@ -238,10 +239,10 @@
                                         <button class="fa fa-ellipsis-v hoverbox" onmousedown="if (this == document.activeElement) setTimeout(() => { this.blur() }, 5)" @click.stop=""></button>
                                         <div class="prop-input-options-select">
                                             <div class="hoverbox" v-if="arrProp.type == 'pointer'" @mousedown="openTab(arrProp.val)">Open&nbsp;link</div>
-                                            <div class="hoverbox" @mousedown="openOverlay('rmprop',[prop.unit,j,k])">Delete&nbsp;element</div>
-                                            <div class="hoverbox" @mousedown="openOverlay('chtype',[prop.unit,j,k])">Change&nbsp;type</div>
-                                            <div class="hoverbox" @mousedown="openOverlay('appprop',[prop.unit,j,k])">Append&nbsp;element</div>
-                                            <div class="hoverbox" @mousedown="openOverlay('preprop',[prop.unit,j,k])">Prepend&nbsp;element</div>
+                                            <div class="hoverbox" @mousedown="openOverlay('rmprop',[j,k])">Delete&nbsp;element</div>
+                                            <div class="hoverbox" @mousedown="openOverlay('chtype',[j,k])">Change&nbsp;type</div>
+                                            <div class="hoverbox" @mousedown="openOverlay('appprop',[j,k])">Append&nbsp;element</div>
+                                            <div class="hoverbox" @mousedown="openOverlay('preprop',[j,k])">Prepend&nbsp;element</div>
                                         </div>
                                     </div>
                                 </div>
@@ -251,11 +252,11 @@
                 </div>
             </div>
             <div id="alert">{{ alertMsg }}<span class="fa fa-check"></span></div>
-            <div id="overlay" v-show="overlayShow">
+            <div id="overlay" v-show="overlayShow" class="noselect">
                 <div>
                     <h1>{{ overlayLabel }}</h1>
-                    <span v-show="/(appprop|preprop)/.test(overlayState) && overlayMeta[2] == undefined">Name</span>
-                    <input type="text" v-show="/(appprop|preprop)/.test(overlayState) && overlayMeta[2] == undefined">
+                    <span v-show="/(appprop|preprop)/.test(overlayState) && overlayMeta[1] == undefined">Name</span>
+                    <input type="text" v-show="/(appprop|preprop)/.test(overlayState) && overlayMeta[1] == undefined">
                     <span v-show="/(appprop|preprop|chtype)/.test(overlayState)">Attribute type</span>
                     <select v-show="/(appprop|preprop|chtype)/.test(overlayState)">
                         <option v-if="canShowOption" value="string">String</option>
@@ -272,7 +273,16 @@
                         <option value="array">Array</option>
                         <option value="arrayi">Array (indexed)</option>
                     </select>
-                    <span v-show="/(chtype|rmprop)/.test(overlayState)"><i>{{ overlayInfo }}</i></span>
+                    <div class="checkboxes">
+                        <span v-show="overlayState == 'rmunit'" @click="overlayCheck.splice(0,1,!overlayCheck[0])"><i class="fa fa-check" :class="{check:overlayCheck[0]}"></i>Remove unreferenced child units (potentially time-consuming)</span>
+                        <span v-show="overlayState == 'rmunit'" @click="overlayCheck.splice(1,1,!overlayCheck[1])"><i class="fa fa-check" :class="{check:overlayCheck[1]}"></i>Check for dangling pointers</span>
+                        <span v-show="overlayState == 'cpunit'" @click="overlayCheck.splice(2,1,!overlayCheck[2])"><i class="fa fa-check" :class="{check:overlayCheck[2]}"></i>Clone child units as well (potentially time-consuming)</span>
+                    </div>
+                    <div class="infolist" v-if="overlayState == 'ptrwarn'">
+                        <div style="margin-bottom:16px"><i>The unit to be deleted ({{ overlayMeta[0][1] }}: {{ overlayMeta[0][0] }}) is still referenced by the following unit(s):</i></div>
+                        <div v-for="unit in overlayMeta[1]">{{ unit[1] }}: {{ unit[0] }}</div>
+                    </div>
+                    <span v-show="/(chtype|rmprop|rmunit|ptrwarn)/.test(overlayState)"><i>{{ overlayInfo }}</i></span>
                     <div class="buttons">
                         <button style="background-color:#3ac318" onclick="overlayConfirm()">Confirm</button>
                         <button style="background-color:#ff0076" @click="overlayShow = false">Cancel</button>

@@ -157,6 +157,29 @@ body {
     margin-bottom: 25px;
 }
 
+#overlay .checkboxes {
+    display: flex;
+    flex-direction: column;
+}
+
+#overlay .checkboxes i {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #bbb;
+    border-radius: 5px;
+    margin: 5px;
+    color: #fff;
+}
+
+#overlay .checkboxes i.check {
+    background-color: #3ac318;
+    border-color: #3ac318;
+}
+
+#overlay .infolist {
+    margin-bottom: 16px;
+}
+
 #overlay .buttons {
     display: flex;
     justify-content: flex-end;
