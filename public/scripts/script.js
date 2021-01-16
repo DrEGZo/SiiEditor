@@ -215,6 +215,16 @@ let main = function () {
             },
             pointerUpdate: function (newVal) {
                 updateRef(this.openTabs[this.activeTab].name, this.openTabs[this.activeTab].pointerBak, newVal);
+            },
+            tokenUpdate: function (newVal, i, j) {
+                if (newVal in this.units) {
+                    let unit = this.openTabs[this.activeTab].name;
+                    let index = this.units[unit];
+                    if (j == undefined) this.data[index].cont[i].type = 'pointer';
+                    else this.data[index].cont[i].val[j].type = 'pointer';
+                    if (this.refs[unit].refs.indexOf(newVal) == -1) this.refs[unit].refs.push(newVal);
+                    if (this.refs[newVal].refBy.indexOf(unit) == -1) this.refs[newVal].refBy.push(unit);
+                }
             }
         },
         computed: {
@@ -242,8 +252,8 @@ let main = function () {
             },
             canShowOption: function () {
                 if (this.overlayState != 'chtype') return true;
-                let unit = this.overlayMeta[0];
-                let index = this.overlayMeta[1];
+                let unit = this.units[this.openTabs[this.activeTab].name];
+                let index = this.overlayMeta[0];
                 if (/arrayi*/.test(this.data[unit].cont[index].type)) {
                     return this.data[unit].cont[index].val.length == 0;
                 } else return true;

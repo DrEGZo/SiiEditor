@@ -137,7 +137,7 @@
                                         <input type="text" v-model="prop.val" @focus="openTabs[activeTab].pointerBak = $event.target.value" @input="pointerUpdate($event.target.value)">
                                     </div>
                                     <div class="prop-input-token" v-if="prop.type=='token'">
-                                        <input type="text" v-model="prop.val">
+                                        <input type="text" v-model="prop.val" @change="tokenUpdate($event.target.value, j)">
                                     </div>
                                     <div class="prop-input-array" v-if="/arrayi*/.test(prop.type)">...</div>
                                     <div class="prop-input-options">
@@ -233,7 +233,7 @@
                                         <input type="text" v-model="arrProp.val" @focus="openTabs[activeTab].pointerBak = $event.target.value" @input="pointerUpdate($event.target.value)">
                                     </div>
                                     <div class="prop-input-token" v-if="arrProp.type=='token'">
-                                        <input type="text" v-model="arrProp.val">
+                                        <input type="text" v-model="arrProp.val" @change="tokenUpdate($event.target.value, j, k)">
                                     </div>
                                     <div class="prop-input-options">
                                         <button class="fa fa-ellipsis-v hoverbox" onmousedown="if (this == document.activeElement) setTimeout(() => { this.blur() }, 5)" @click.stop=""></button>
