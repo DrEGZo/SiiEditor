@@ -31,6 +31,14 @@
             </div>
             <div id="editorpanel" class="panel" :style="getPanelPosition(2)">
                 <div id="unitbrowser">
+                    <div id="unit-search">
+                        <input type="text" placeholder="Search for unit..." @input="unitSearch($event.target.value)">
+                        <i class="fa fa-close"></i>
+                    </div>
+                    <div id="unit-search-result" v-show="unitSearchResult[1] > 0">
+                        <div class="unit-name noselect hoverbox" v-for="unit in unitSearchResult[0]" @dblclick="openTab(unit)">{{ unit }}</div>
+                        <div class="unit-name noselect" v-show="unitSearchResult[1] > 5">Displaying 5 of {{ unitSearchResult[1] }} results</div>
+                    </div>
                     <div class="unit-cat" v-for="(type, name) in types">
                         <div class="unit-cat-name hoverbox" @click="type.state = !type.state">
                             <span class="fa fa-chevron-right" :style="type.state ? 'transform:rotate(90deg)' : ''"></span>

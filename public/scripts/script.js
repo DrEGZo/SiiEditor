@@ -22,7 +22,8 @@ let main = function () {
             overlayState: '',
             overlayMeta: [],
             overlayCheck: [true, true, true],
-            refs: {}
+            refs: {},
+            unitSearchResult: [[], 0]
         },
         methods: {
             changeScreen: function (screen) {
@@ -215,6 +216,20 @@ let main = function () {
                     if (this.refs[unit].refs.indexOf(newVal) == -1) this.refs[unit].refs.push(newVal);
                     if (this.refs[newVal].refBy.indexOf(unit) == -1) this.refs[newVal].refBy.push(unit);
                 }
+            },
+            unitSearch: function (query) {
+                let result = [[], 0];
+                if (query.length < 3) {
+                    this.unitSearchResult = result;
+                    return;
+                }
+                for (unit in this.units) {
+                    if (unit.toLowerCase().includes(query.toLowerCase())) {
+                        if (result[0].length < 5) result[0].push(unit);
+                        result[1]++;
+                    }
+                }
+                this.unitSearchResult = result;
             }
         },
         computed: {

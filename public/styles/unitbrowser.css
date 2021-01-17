@@ -9,6 +9,46 @@
     overflow-y: scroll;
 }
 
+#unit-search {
+    display: flex;
+    padding: 5px;
+}
+
+#unit-search input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    flex: 1;
+    font-size: 12px;
+    width: 0;
+}
+
+#unit-search i::before {
+    position: absolute;
+    display: flex;
+    width: 24px;
+    height: 24px;
+    color: #ccc;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(-100%);
+    font-size: 15px;
+}
+
+#unit-search-result {
+    margin: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#unit-search-result .unit-name {
+    padding: 5px 10px;
+}
+
 .unit-cat {
     background-color: #0100d4;
     margin: 5px;
