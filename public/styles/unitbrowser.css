@@ -27,6 +27,10 @@
     cursor: pointer;
 }
 
+#unit-search i {
+    position: relative;
+}
+
 #unit-search i::before {
     position: absolute;
     display: flex;

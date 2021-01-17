@@ -36,10 +36,6 @@
     width: 0;
 }
 
-#unit-options i {
-    position: relative;
-}
-
 #unit-options i::before {
     position: absolute;
     display: flex;
