@@ -1,5 +1,6 @@
 function overlayConfirm() {
     let state = vm.overlayState;
+    vm.overlayWarn = false;
     if (/(appprop|preprop|chtype|rmprop)/.test(state)) {
         vm.overlayShow = false;
         let name =  document.querySelector('#overlay input').value;
@@ -68,7 +69,6 @@ function overlayConfirm() {
             console.log('cannot rename: invalid unit name');
             return;
         };
-        vm.overlayShow = false;
         let temp = vm.overlayCheck[3];
         if (temp) name = '.' + name;
         if (name in vm.units) {
@@ -76,6 +76,7 @@ function overlayConfirm() {
             console.log('cannot rename: unit already exists');
             return;
         };
+        vm.overlayShow = false;
         // units
         let index = vm.units[unit];
         delete vm.units[unit];
@@ -117,6 +118,47 @@ function overlayConfirm() {
             idx = vm.refs[ref].refs.indexOf(unit);
             vm.refs[ref].refs.splice(idx, 1, name);
         }
+    } else if (state == 'clsname') {
+        let type = document.querySelector('#overlay input').value;
+        if (!/^[a-z_]+$/.test(type)) {
+            vm.overlayWarn = true;
+            return;
+        }
+        vm.overlayMeta = [type];
+        vm.overlayState = 'newunit';
+    } else if (state == 'newunit') {
+        let name = document.querySelector('#overlay input').value;
+        let type = vm.overlayMeta[0];
+        if (!/^[a-z_][a-z_0-9]{0,11}([.][a-z_0-9]{1,12})*$/.test(name)) {
+            vm.overlayWarn = true;
+            console.log('cannot name unit: invalid unit name');
+            return;
+        };
+        let temp = vm.overlayCheck[3];
+        if (temp) name = '.' + name;
+        if (name in vm.units) {
+            vm.overlayWarn = true;
+            console.log('cannot name unit: unit already exists');
+            return;
+        };
+        vm.overlayShow = false;
+        vm.refs[name] = [];
+        vm.refs[name].push({
+            refs: [],
+            refBy: []
+        });
+        if (!(type in vm.types)) Vue.set(vm.types, type, {
+            entries: [],
+            state: false
+        });
+        vm.types[type].entries.push(name);
+        vm.units[name] = vm.data.length;
+        vm.data.push({
+            cont: [],
+            name: name,
+            type: type
+        });
+        vm.openTab(name);
     }
     document.querySelector('#overlay input').value = '';
     document.querySelector('#overlay select').value = 'string';

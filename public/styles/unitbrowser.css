@@ -9,6 +9,12 @@
     overflow-y: scroll;
 }
 
+#new-unit {
+    background-color: #0100f3;
+    margin: 5px;
+    border-radius: 5px;
+}
+
 #unit-search {
     display: flex;
     padding: 5px;
@@ -24,7 +30,6 @@
     flex: 1;
     font-size: 12px;
     width: 0;
-    cursor: pointer;
 }
 
 #unit-search i {
@@ -41,6 +46,7 @@
     justify-content: center;
     transform: translateX(-100%);
     font-size: 15px;
+    cursor: pointer;
 }
 
 #unit-search-result {

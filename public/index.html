@@ -31,6 +31,9 @@
             </div>
             <div id="editorpanel" class="panel" :style="getPanelPosition(2)">
                 <div id="unitbrowser">
+                    <div id="new-unit" class="unit-cat-name hoverbox" @click="openOverlay('clsname', [])">
+                        <span class="fa fa-plus"></span>
+                        <label>Create new unit</label></div>
                     <div id="unit-search">
                         <input type="text" placeholder="Search for unit..." @input="unitSearch($event.target.value)">
                         <i class="fa fa-close" @click="$event.target.previousElementSibling.value = ''; unitSearch('')"></i>
@@ -266,7 +269,8 @@
                 <div>
                     <h1>{{ overlayLabel }}</h1>
                     <span v-show="/(appprop|preprop|rename)/.test(overlayState) && overlayMeta[1] == undefined">Name</span>
-                    <input type="text" v-show="/(appprop|preprop|rename)/.test(overlayState) && overlayMeta[1] == undefined">
+                    <span v-show="overlayState == 'clsname'">Class name</span>
+                    <input type="text" v-show="/(appprop|preprop|rename|clsname|newunit)/.test(overlayState) && overlayMeta[1] == undefined" @input="typeSearch($event.target.value)">
                     <span v-show="/(appprop|preprop|chtype)/.test(overlayState)">Attribute type</span>
                     <select v-show="/(appprop|preprop|chtype)/.test(overlayState)">
                         <option v-if="canShowOption" value="string">String</option>
@@ -287,13 +291,16 @@
                         <span v-show="overlayState == 'rmunit'" @click="overlayCheck.splice(0,1,!overlayCheck[0])"><i class="fa fa-check" :class="{check:overlayCheck[0]}"></i>Remove unreferenced child units (potentially time-consuming)</span>
                         <span v-show="overlayState == 'rmunit'" @click="overlayCheck.splice(1,1,!overlayCheck[1])"><i class="fa fa-check" :class="{check:overlayCheck[1]}"></i>Check for dangling pointers</span>
                         <span v-show="overlayState == 'cpunit'" @click="overlayCheck.splice(2,1,!overlayCheck[2])"><i class="fa fa-check" :class="{check:overlayCheck[2]}"></i>Clone child units as well (potentially time-consuming)</span>
-                        <span v-show="overlayState == 'rename'" @click="overlayCheck.splice(3,1,!overlayCheck[3])"><i class="fa fa-check" :class="{check:overlayCheck[3]}"></i>Make unit name temporal (prevents interference with external units, but will be overwritten upon next save)</span>
+                        <span v-show="/(rename|newunit)/.test(overlayState)" @click="overlayCheck.splice(3,1,!overlayCheck[3])"><i class="fa fa-check" :class="{check:overlayCheck[3]}"></i>Make unit name temporal (prevents interference with external units, but will be overwritten upon next save)</span>
                     </div>
                     <div class="infolist" v-if="overlayState == 'ptrwarn'">
                         <div style="margin-bottom:16px"><i>The unit to be deleted ({{ overlayMeta[0][1] }}: {{ overlayMeta[0][0] }}) is still referenced by the following unit(s):</i></div>
                         <div v-for="unit in overlayMeta[1]">{{ unit[1] }}: {{ unit[0] }}</div>
                     </div>
-                    <span v-show="/(chtype|rmprop|rmunit|ptrwarn|rename)/.test(overlayState)"><i>{{ overlayInfo }}</i></span>
+                    <div class="class-suggs" v-if="overlayState == 'clsname'">
+                        <span class="hoverbox" v-for="type in typeSearchResult" @click="confirmClassName(type)">{{ type }}</span>
+                    </div>
+                    <span v-show="/(chtype|rmprop|rmunit|ptrwarn|rename|newunit)/.test(overlayState)"><i>{{ overlayInfo }}</i></span>
                     <span v-show="overlayWarn" style="color:red">Invalid input.</span>
                     <div class="buttons">
                         <button style="background-color:#3ac318" onclick="overlayConfirm()">Confirm</button>

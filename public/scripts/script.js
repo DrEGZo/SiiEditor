@@ -24,7 +24,8 @@ let main = function () {
             overlayCheck: [true, true, true, true],
             overlayWarn: false,
             refs: {},
-            unitSearchResult: [[], 0]
+            unitSearchResult: [[], 0],
+            typeSearchResult: []
         },
         methods: {
             changeScreen: function (screen) {
@@ -232,6 +233,22 @@ let main = function () {
                     }
                 }
                 this.unitSearchResult = result;
+            },
+            typeSearch: function (query) {
+                let result = [];
+                if (query.length < 3 || this.overlayState != 'clsname') {
+                    this.typeSearchResult = result;
+                    return;
+                }
+                for (type in this.types) {
+                    if (type.toLowerCase().includes(query.toLowerCase())) {
+                        if (result.length < 5) result.push(type);
+                    }
+                }
+                this.typeSearchResult = result;
+            },
+            confirmClassName: function (type) {
+                document.querySelector('#overlay input').value = type;
             }
         },
         computed: {
@@ -250,14 +267,15 @@ let main = function () {
                 if (this.overlayState == 'rmunit') return 'Delete Unit';
                 if (this.overlayState == 'cpunit') return 'Clone Unit';
                 if (this.overlayState == 'ptrwarn') return 'Dangling Pointer Warning';
-                if (this.overlayState == 'rename') return 'Enter Unit Name'
+                if (this.overlayState == 'rename' || this.overlayState == 'newunit') return 'Enter Unit Name';
+                if (this.overlayState == 'clsname') return 'Enter Class Name';
             },
             overlayInfo: function () {
                 if (this.overlayState == 'rmprop') return 'Bear in mind that this cannot be undone.';
                 if (this.overlayState == 'chtype') return 'This will override the porperty\'s current value.';
                 if (this.overlayState == 'rmunit') return 'Bear in mind that this cannot be undone.';
                 if (this.overlayState == 'ptrwarn') return 'Hit Confirm to replace the pointer with NULL or hit Cancel to keep this unit for now.';
-                if (this.overlayState == 'rename') return 'Unit name is composed of components separated by dots. Each component has up to 12 characters (lowercase letters, numbers, underscores).';
+                if (this.overlayState == 'rename' || this.overlayState == 'newunit') return 'Unit name is composed of components separated by dots. Each component has up to 12 characters (lowercase letters, numbers, underscores).';
             },
             canShowOption: function () {
                 if (this.overlayState != 'chtype') return true;
