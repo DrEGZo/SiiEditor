@@ -69,6 +69,11 @@
                         <button @click="openOverlay('rename', [])">Rename Unit</button>
                     </div>
                     <div id="windowbar">
+                        <div class="property noselect" v-show="getProps.length == 0 && activeTab != -1" @click="openOverlay('preprop',[0])">
+                            <div class="property-pair">
+                                <div class="prop-name" style="width: 100%;cursor:pointer">Unit is empty. Click here to add property.</div>
+                            </div>
+                        </div>
                         <div class="property noselect" v-for="(prop,j) in getProps" v-show="prop.prop.toLowerCase().includes(openTabs[activeTab].filter.toLowerCase())">
                             <div class="property-pair" @click="prop.expand = !prop.expand" :style="/arrayi*/.test(prop.type) ? 'cursor:pointer' : ''">
                                 <div class="prop-name"><span v-if="/arrayi*/.test(prop.type)" class="fa fa-chevron-right" :class="{rotate:prop.expand}"></span>{{ prop.prop }}</div>

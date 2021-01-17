@@ -32,14 +32,15 @@ function parseSIItoJSON(sii) {
         let review_arrays = [];
         // Regex to split up the SII
         let regex_siiUnit = /^\s*SiiNunit\s*{\s*(\S[^]+})\s*}\s*$/;
-        let regex_units = /.+:.+\s*{[^}]+}/g;
-        let regex_unitdata = /^\s*([a-z_]+)\s*:\s*([a-z0-9._]+)\s*{\s*([^]+)}/;
+        let regex_units = /.+:.+\s*{[^}]*}/g;
+        let regex_unitdata = /^\s*([a-z_]+)\s*:\s*([a-z0-9._]+)\s*{\s*([^]*)}/;
         let regex_contentlines = /^.*:.*$/mg;
         let regex_property = /^\s*([a-z0-9_\[\]]+)\s*:\s*(\S+.*\S+|\S)\s*$/;
         // Remove SII Frame and split in units
         if (!regex_siiUnit.test(sii)) reject('e11');
         let unitBlock = sii.match(regex_siiUnit)[1];
         let units = unitBlock.match(regex_units);
+        if (units == null) units = [];
         for (let i = 0; i < units.length; i++) {
             // note name and type of unit, split content into lines
             if (!regex_unitdata.test(units[i])) reject('e12');
@@ -50,6 +51,7 @@ function parseSIItoJSON(sii) {
             let content = [];
             let arraylist = {};
             let contentlines = unitcontent.match(regex_contentlines);
+            if (contentlines == null) contentlines = [];
             for (let j = 0; j < contentlines.length; j++) {
                 // read property name and value, parse type and value
                 if (!regex_property.test(contentlines[j])) reject('e13');
