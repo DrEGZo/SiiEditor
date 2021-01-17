@@ -33,7 +33,7 @@
                 <div id="unitbrowser">
                     <div id="unit-search">
                         <input type="text" placeholder="Search for unit..." @input="unitSearch($event.target.value)">
-                        <i class="fa fa-close"></i>
+                        <i class="fa fa-close" @click="$event.target.previousElementSibling.value = ''; unitSearch('')"></i>
                     </div>
                     <div id="unit-search-result" v-show="unitSearchResult[1] > 0">
                         <div class="unit-name noselect hoverbox" v-for="unit in unitSearchResult[0]" @dblclick="openTab(unit)">{{ unit }}</div>
@@ -60,7 +60,7 @@
                     <h1 v-if="activeTab != -1" class="noselect">{{ getTabInfo }}</h1>
                     <div id="unit-options" v-show="activeTab != -1">
                         <input type="text" placeholder="Filter for property..." v-if="activeTab != -1" v-model="openTabs[activeTab].filter">
-                        <i class="fa fa-close"></i>
+                        <i class="fa fa-close" onclick="Vue.set(vm.openTabs[vm.activeTab], 'filter', '')"></i>
                         <button @click="openOverlay('cpunit', [])">Clone Unit</button>
                         <button @click="openOverlay('rmunit', [])">Delete Unit</button>
                     </div>

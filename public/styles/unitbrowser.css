@@ -24,6 +24,7 @@
     flex: 1;
     font-size: 12px;
     width: 0;
+    cursor: pointer;
 }
 
 #unit-search i::before {
