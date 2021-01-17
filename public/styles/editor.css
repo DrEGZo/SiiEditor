@@ -10,6 +10,7 @@
 #tabwindow h1 {
     margin: 20px 0 0 15px;
     font-size: 35px;
+    cursor: default;
 }
 
 #windowbar {
