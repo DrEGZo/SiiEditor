@@ -1,7 +1,7 @@
 function overlayConfirm() {
-    vm.overlayShow = false;
     let state = vm.overlayState;
     if (/(appprop|preprop|chtype|rmprop)/.test(state)) {
+        vm.overlayShow = false;
         let name =  document.querySelector('#overlay input').value;
         let type = document.querySelector('#overlay select').value;
         let unit = vm.units[vm.openTabs[vm.activeTab].name];
@@ -34,6 +34,7 @@ function overlayConfirm() {
             }
         }
     } else if (/(cpunit|rmunit)/.test(state)) {
+        vm.overlayShow = false;
         let name = vm.openTabs[vm.activeTab].name;
         let rmChilds = vm.overlayCheck[0];
         let checkPtr = vm.overlayCheck[1];
@@ -41,6 +42,7 @@ function overlayConfirm() {
         if (state == 'cpunit') vm.openTab(vm.copyUnit(name, cpChilds));
         if (state == 'rmunit') vm.deleteUnit(name, rmChilds, checkPtr);
     } else if (state == 'ptrwarn') {
+        vm.overlayShow = false;
         let child = vm.overlayMeta[0][0];
         for (let i = 0; i < vm.refs[child].refBy.length; i++) {
             let parent = vm.refs[child].refBy[i];
@@ -58,6 +60,63 @@ function overlayConfirm() {
             updateRef(parent, child);
         }
         vm.deleteUnit(child, vm.overlayMeta[2], true);
+    } else if (state == 'rename') {
+        let name = document.querySelector('#overlay input').value;
+        let unit = vm.openTabs[vm.activeTab].name;
+        if (!/^[a-z_][a-z_0-9]{0,11}([.][a-z_0-9]{1,12})*$/.test(name)) {
+            vm.overlayWarn = true;
+            console.log('cannot rename: invalid unit name');
+            return;
+        };
+        vm.overlayShow = false;
+        let temp = vm.overlayCheck[3];
+        if (temp) name = '.' + name;
+        if (name in vm.units) {
+            vm.overlayWarn = true;
+            console.log('cannot rename: unit already exists');
+            return;
+        };
+        // units
+        let index = vm.units[unit];
+        delete vm.units[unit];
+        Vue.set(vm.units, name, index);
+        // data
+        Vue.set(vm.data[index], 'name', name);
+        // types
+        let type = vm.data[index].type;
+        let i = vm.types[type].entries.indexOf(unit);
+        vm.types[type].entries.splice(i, 1, name);
+        // tabs
+        for (i = 0; i < vm.openTabs.length; i++) {
+            if (vm.openTabs[i].name == unit) Vue.set(vm.openTabs[i], 'name', name); 
+        }
+        // refs
+        let copy = vm.refs[unit];
+        delete vm.refs[unit];
+        vm.refs[name] = copy;
+        for (i = 0; i < vm.refs[name].refs.length; i++) {
+            let ref = vm.refs[name].refs[i];
+            let j = vm.refs[ref].refBy.indexOf(unit);
+            vm.refs[ref].refBy.splice(j, 1, name);
+        }
+        for (i = 0; i < vm.refs[name].refBy.length; i++) {
+            let ref = vm.refs[name].refBy[i];
+            let idx = vm.units[ref];
+            for (let j = 0; j < vm.data[idx].cont.length; j++) {
+                if (vm.data[idx].cont[j].type == 'pointer') {
+                    if (vm.data[idx].cont[j].val == unit) Vue.set(vm.data[idx].cont[j], 'val', name);  
+                }
+                if (vm.data[idx].cont[j].type.includes('array')) {
+                    for (let k = 0; k < vm.data[idx].cont[j].val.length; k++) {
+                        if (vm.data[idx].cont[j].val[k].type == 'pointer') {
+                            if (vm.data[idx].cont[j].val[k].val == unit) Vue.set(vm.data[idx].cont[j].val[k], 'val', name);
+                        }
+                    }
+                }
+            }
+            idx = vm.refs[ref].refs.indexOf(unit);
+            vm.refs[ref].refs.splice(idx, 1, name);
+        }
     }
     document.querySelector('#overlay input').value = '';
     document.querySelector('#overlay select').value = 'string';
